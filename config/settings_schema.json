@@ -1,0 +1,84 @@
+[
+  {
+    "name": "Store details",
+    "settings": [
+      {
+        "type": "text",
+        "id": "store_phone",
+        "label": "Store phone",
+        "default": "+49 (0) 000 0000000"
+      },
+      {
+        "type": "text",
+        "id": "instagram_url",
+        "label": "Instagram URL",
+        "default": "https://www.instagram.com/"
+      },
+      {
+        "type": "text",
+        "id": "facebook_url",
+        "label": "Facebook URL",
+        "default": "https://www.facebook.com/"
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_url",
+        "label": "WhatsApp URL",
+        "default": "https://wa.me/"
+      },
+      {
+        "type": "text",
+        "id": "policy_impressum",
+        "label": "Impressum URL",
+        "default": "/policies/terms-of-service"
+      },
+      {
+        "type": "text",
+        "id": "policy_datenschutz",
+        "label": "Datenschutz URL",
+        "default": "/policies/privacy-policy"
+      },
+      {
+        "type": "text",
+        "id": "policy_agb",
+        "label": "AGB URL",
+        "default": "/policies/terms-of-service"
+      }
+    ]
+  },
+  {
+    "name": "Home collections",
+    "settings": [
+      {
+        "type": "collection",
+        "id": "home_deals_collection",
+        "label": "Deals collection",
+        "info": "Choose a collection to display in the Weekly Deals section."
+      },
+      {
+        "type": "range",
+        "id": "home_deals_limit",
+        "label": "Deals limit",
+        "min": 1,
+        "max": 12,
+        "step": 1,
+        "default": 3
+      },
+      {
+        "type": "collection",
+        "id": "home_bestsellers_collection",
+        "label": "Bestsellers collection",
+        "info": "Choose a collection to display in the Bestseller section."
+      },
+      {
+        "type": "range",
+        "id": "home_bestsellers_limit",
+        "label": "Bestsellers limit",
+        "min": 4,
+        "max": 20,
+        "step": 1,
+        "default": 8
+      }
+    ]
+  }
+]

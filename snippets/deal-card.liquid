@@ -1,0 +1,41 @@
+{% comment %}
+  Reusable dynamic deal card
+{% endcomment %}
+{% assign variant = product.selected_or_first_available_variant %}
+{% if variant %}
+  {% assign compare_price = variant.compare_at_price | default: 0 %}
+  {% assign discount_label = '' %}
+  {% if compare_price > variant.price and compare_price > 0 %}
+    {% assign discount = compare_price | minus: variant.price | times: 100.0 | divided_by: compare_price %}
+    {% assign discount_label = discount | floor | prepend: '-' | append: '%' %}
+  {% endif %}
+
+  <div class="deal-card">
+    {% if discount_label != blank %}
+      <div class="deal-badge">{{ discount_label }}</div>
+    {% endif %}
+
+    <div class="deal-img">
+      {% if product.featured_image %}
+        <img src="{{ product.featured_image | image_url: width: 220 }}" alt="{{ product.title | escape }}" />
+      {% else %}
+        <span class="deal-emoji">🌶️</span>
+      {% endif %}
+    </div>
+
+    <div class="deal-info">
+      <span class="deal-category">{{ product.type | default: 'Indisch' }}</span>
+      <h3>{{ product.title }}</h3>
+      <p>{{ product.description | strip_html | truncate: 90 }}</p>
+
+      <div class="deal-price">
+        {% if compare_price > variant.price and compare_price > 0 %}
+          <span class="price-old">{{ compare_price | money }}</span>
+        {% endif %}
+        <span class="price-new">{{ variant.price | money }}</span>
+      </div>
+
+      {% render 'shopify-product-form', product_handle: product.handle, button_class: 'btn-primary btn-sm', button_label: 'In den Warenkorb' %}
+    </div>
+  </div>
+{% endif %}

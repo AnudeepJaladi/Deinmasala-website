@@ -1,0 +1,16 @@
+{% comment %} Product Add Button (fallback-safe) {% endcomment %}
+{% assign product_handle = product_handle | default: '' %}
+{% assign product_btn_class = button_class | default: 'btn-primary btn-full' %}
+{% assign button_label = button_label | default: 'In den Warenkorb' %}
+{% assign product_obj = all_products[product_handle] %}
+{% assign variant_obj = product_obj.first_available_variant %}
+
+{% if product_obj != blank and variant_obj != blank %}
+  <form class="shopify-buy-form" action="/cart/add" method="post">
+    <input type="hidden" name="id" value="{{ variant_obj.id }}" />
+    <input type="hidden" name="quantity" value="1" />
+    <button class="btn {{ product_btn_class }}" type="submit">{{ button_label }}</button>
+  </form>
+{% else %}
+  <button class="btn {{ product_btn_class }}" type="button" disabled>Aktuell nicht verfügbar</button>
+{% endif %}
