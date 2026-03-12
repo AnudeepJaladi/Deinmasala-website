@@ -1,7 +1,7 @@
 {% if product %}
-  <section class="section">
+  <!-- Breadcrumb -->
+  <section class="section" style="padding: 24px 0;">
     <div class="container">
-      <!-- Breadcrumb Navigation -->
       <div class="product-breadcrumb">
         <a href="{{ routes.root_url }}">Startseite</a>
         <span class="breadcrumb-sep">›</span>
@@ -13,10 +13,10 @@
   </section>
 
   <!-- Main Product Section -->
-  <section class="section product-page-section">
+  <section class="section">
     <div class="container">
       <div class="product-page-grid">
-        <!-- Image Gallery -->
+        <!-- Left: Image Gallery -->
         <div class="product-gallery">
           <div class="product-gallery-main">
             {% if product.featured_media %}
@@ -32,7 +32,6 @@
             <button class="product-wishlist-btn" aria-label="Add to Wishlist">♡</button>
           </div>
 
-          <!-- Thumbnail Gallery (if multiple images) -->
           {% if product.media.size > 1 %}
             <div class="product-gallery-thumbs">
               {% for media in product.media limit: 5 %}
@@ -44,9 +43,9 @@
           {% endif %}
         </div>
 
-        <!-- Product Details -->
+        <!-- Right: Product Details -->
         <div class="product-details">
-          <!-- Header: Brand, Title, Rating -->
+          <!-- Product Header -->
           <div class="product-header">
             <p class="product-brand">{{ product.vendor }}</p>
             <h1 class="product-title">{{ product.title }}</h1>
@@ -56,7 +55,7 @@
             </div>
           </div>
 
-          <!-- Quick Info Badges -->
+          <!-- Meta Badges -->
           <div class="product-meta-badges">
             {% if product.type != blank %}
               <span class="meta-badge">{{ product.type }}</span>
@@ -70,7 +69,7 @@
             {% endif %}
           </div>
 
-          <!-- Price Section -->
+          <!-- Price & Stock -->
           {% assign variant = product.selected_or_first_available_variant %}
           <div class="product-price-section">
             <div class="product-price-display">
@@ -90,7 +89,7 @@
             {% endif %}
           </div>
 
-          <!-- Trust Badges Section -->
+          <!-- Trust Badges -->
           <div class="product-trust-section">
             <div class="trust-item">
               <span class="trust-icon">🚚</span>
@@ -139,7 +138,7 @@
             <div class="form-group">
               <label for="Quantity-{{ product.id }}" class="form-label">Menge</label>
               <div class="product-quantity-wrapper">
-                <button type="button" class="qty-btn qty-minus" aria-label="Menge verringern">−</button>
+                <button type="button" class="qty-btn qty-minus" aria-label="Decrease quantity">−</button>
                 <input
                   id="Quantity-{{ product.id }}"
                   type="number"
@@ -150,52 +149,42 @@
                   class="product-quantity-input"
                   required
                 />
-                <button type="button" class="qty-btn qty-plus" aria-label="Menge erhöhen">+</button>
+                <button type="button" class="qty-btn qty-plus" aria-label="Increase quantity">+</button>
               </div>
             </div>
 
             <!-- Add to Cart Button -->
-            <button type="submit" class="btn btn-primary btn-lg btn-full product-add-to-cart">
+            <button type="submit" class="btn btn-primary btn-lg btn-full">
               In den Warenkorb
             </button>
 
-            <!-- Secondary Actions -->
-            <div class="product-secondary-actions">
-              <button type="button" class="btn btn-outline product-share-btn">
-                <span>Teilen</span>
-              </button>
-            </div>
+            <!-- Share Button -->
+            <button type="button" class="btn btn-outline btn-full product-share-btn" style="margin-top: 8px;">
+              Teilen
+            </button>
           </form>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Product Description Tabs -->
+  <!-- Product Tabs -->
   <section class="section product-tabs-section">
     <div class="container">
       <div class="product-tabs">
         <div class="product-tabs-header">
-          <button class="product-tab-btn active" data-tab="description">
-            Beschreibung
-          </button>
-          <button class="product-tab-btn" data-tab="ingredients">
-            Zutaten & Nährwerte
-          </button>
-          <button class="product-tab-btn" data-tab="shipping">
-            Versand & Rückgabe
-          </button>
+          <button class="product-tab-btn active" data-tab="description">Beschreibung</button>
+          <button class="product-tab-btn" data-tab="ingredients">Zutaten & Nährwerte</button>
+          <button class="product-tab-btn" data-tab="shipping">Versand & Rückgabe</button>
         </div>
 
         <div class="product-tabs-content">
-          <!-- Description Tab -->
           <div class="product-tab-pane active" id="tab-description">
             <div class="tab-content-text">
               {{ product.description }}
             </div>
           </div>
 
-          <!-- Ingredients Tab -->
           <div class="product-tab-pane" id="tab-ingredients">
             <div class="tab-content-text">
               <h3>Zutaten & Nährwerte</h3>
@@ -203,7 +192,6 @@
             </div>
           </div>
 
-          <!-- Shipping Tab -->
           <div class="product-tab-pane" id="tab-shipping">
             <div class="tab-content-text">
               <h3>Versand & Rückgabe</h3>
@@ -228,132 +216,114 @@
       </div>
 
       <div class="reviews-container">
-        <div class="reviews-summary">
-          <div class="reviews-rating-large">
-            <p class="rating-value">4.5</p>
-            <p class="rating-stars">★★★★★</p>
-            <p class="rating-count">128 Bewertungen</p>
+        <div class="reviews-rating-large">
+          <p class="rating-value">4.5</p>
+          <p class="rating-stars">★★★★★</p>
+          <p class="rating-count">128 Bewertungen</p>
+        </div>
+        <div class="reviews-list">
+          <div class="review-item">
+            <p class="review-author"><strong>Sarah K.</strong></p>
+            <p class="review-rating">★★★★★</p>
+            <p class="review-text">"Großartig! Die Qualität ist wirklich excellent und der Versand war sehr schnell."</p>
           </div>
-          <div class="reviews-list">
-            <div class="review-item">
-              <p class="review-author"><strong>Sarah K.</strong></p>
-              <p class="review-rating">★★★★★</p>
-              <p class="review-text">"Großartig! Die Qualität ist wirklich excellent und der Versand war sehr schnell."</p>
-            </div>
-            <div class="review-item">
-              <p class="review-author"><strong>Michael B.</strong></p>
-              <p class="review-rating">★★★★★</p>
-              <p class="review-text">"Authentische Gewürze mit hervorragendem Geschmack. Sehr zu empfehlen!"</p>
-            </div>
-            <div class="review-item">
-              <p class="review-author"><strong>Anna M.</strong></p>
-              <p class="review-rating">★★★★☆</p>
-              <p class="review-text">"Gutes Produkt, schnelle Lieferung. Beim nächsten Mal gerne wieder."</p>
-            </div>
+          <div class="review-item">
+            <p class="review-author"><strong>Michael B.</strong></p>
+            <p class="review-rating">★★★★★</p>
+            <p class="review-text">"Authentische Gewürze mit hervorragendem Geschmack. Sehr zu empfehlen!"</p>
+          </div>
+          <div class="review-item">
+            <p class="review-author"><strong>Anna M.</strong></p>
+            <p class="review-rating">★★★★☆</p>
+            <p class="review-text">"Gutes Produkt, schnelle Lieferung. Beim nächsten Mal gerne wieder."</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Related Products Section -->
+  <!-- Related Products -->
   <section class="section product-related-section">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">Ähnliche Produkte</h2>
-        <p class="section-subtitle">Sie könnten auch interessiert sein</p>
       </div>
 
       <div class="products-grid">
-        {% assign category_products = product.collections.first.products | where: "available", true | where: "id", "!=" product.id | limit: 4 %}
-        {% if category_products.size > 0 %}
-          {% for prod in category_products %}
+        {% assign related_products = product.collections.first.products | where: "available", true | where: "id", "!=" product.id | limit: 4 %}
+        {% if related_products.size > 0 %}
+          {% for prod in related_products %}
             {% render 'product-card', product: prod %}
           {% endfor %}
         {% else %}
-          {% assign all_products = product.collections.first.products | where: "id", "!=" product.id | limit: 4 %}
-          {% for prod in all_products %}
-            {% render 'product-card', product: prod %}
-          {% endfor %}
+          <p>Keine ähnlichen Produkte verfügbar.</p>
         {% endif %}
       </div>
     </div>
   </section>
+
+  <script>
+    // Quantity buttons
+    document.querySelectorAll('.qty-plus').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const input = this.parentElement.querySelector('.product-quantity-input');
+        input.value = Math.min(parseInt(input.value) + 1, 99);
+      });
+    });
+
+    document.querySelectorAll('.qty-minus').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const input = this.parentElement.querySelector('.product-quantity-input');
+        input.value = Math.max(parseInt(input.value) - 1, 1);
+      });
+    });
+
+    // Wishlist button
+    document.querySelectorAll('.product-wishlist-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        this.classList.toggle('active');
+        this.textContent = this.classList.contains('active') ? '♥' : '♡';
+      });
+    });
+
+    // Product tabs
+    document.querySelectorAll('.product-tab-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const tabName = this.dataset.tab;
+
+        document.querySelectorAll('.product-tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.product-tab-pane').forEach(p => p.classList.remove('active'));
+
+        this.classList.add('active');
+        document.getElementById('tab-' + tabName).classList.add('active');
+      });
+    });
+
+    // Share button
+    document.querySelectorAll('.product-share-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (navigator.share) {
+          navigator.share({
+            title: document.querySelector('.product-title').textContent,
+            url: window.location.href
+          });
+        }
+      });
+    });
+  </script>
 
 {% else %}
   <section class="section">
     <div class="container">
       <div class="product-not-found">
         <p class="section-title">Produkt nicht gefunden</p>
-        <p class="product-not-found-text">Das gesuchte Produkt existiert leider nicht oder wurde entfernt.</p>
+        <p style="color: var(--text-secondary); margin: 16px 0 32px 0;">Das gesuchte Produkt existiert leider nicht oder wurde entfernt.</p>
         <a href="/collections/all" class="btn btn-primary">Zurück zu allen Produkten</a>
       </div>
     </div>
   </section>
 {% endif %}
-
-<script>
-  // Quantity increment/decrement
-  document.querySelectorAll('.qty-plus').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-      e.preventDefault();
-      const input = this.parentElement.querySelector('.product-quantity-input');
-      input.value = Math.min(parseInt(input.value) + 1, 99);
-    });
-  });
-
-  document.querySelectorAll('.qty-minus').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-      e.preventDefault();
-      const input = this.parentElement.querySelector('.product-quantity-input');
-      input.value = Math.max(parseInt(input.value) - 1, 1);
-    });
-  });
-
-  // Wishlist button
-  document.querySelectorAll('.product-wishlist-btn').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-      e.preventDefault();
-      this.classList.toggle('active');
-      this.textContent = this.classList.contains('active') ? '♥' : '♡';
-    });
-  });
-
-  // Product tabs
-  document.querySelectorAll('.product-tab-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const tabName = this.dataset.tab;
-
-      document.querySelectorAll('.product-tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.product-tab-pane').forEach(p => p.classList.remove('active'));
-
-      this.classList.add('active');
-      document.getElementById('tab-' + tabName).classList.add('active');
-    });
-  });
-
-  // Image gallery thumbnails
-  document.querySelectorAll('.product-gallery-thumb').forEach(thumb => {
-    thumb.addEventListener('click', function() {
-      const mainImage = document.querySelector('.product-gallery-image');
-      const img = this.querySelector('img');
-      mainImage.src = img.src.replace('width=100', 'width=800');
-
-      document.querySelectorAll('.product-gallery-thumb').forEach(t => t.classList.remove('active'));
-      this.classList.add('active');
-    });
-  });
-
-  // Share button
-  document.querySelectorAll('.product-share-btn').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-      e.preventDefault();
-      if (navigator.share) {
-        navigator.share({
-          title: document.querySelector('.product-title').textContent,
-          url: window.location.href
-        });
-      }
-    });
-  });
-</script>
