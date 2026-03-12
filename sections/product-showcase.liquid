@@ -1,0 +1,541 @@
+{% comment %} DeinMasala Custom Product Showcase Section {% endcomment %}
+
+<style>
+  .product-showcase {
+    padding: 80px 0;
+  }
+
+  .showcase-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+
+  /* Gallery */
+  .showcase-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: sticky;
+    top: 120px;
+  }
+
+  .gallery-main {
+    position: relative;
+    aspect-ratio: 1;
+    background: var(--bg-secondary);
+    border-radius: 24px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 20px 48px var(--shadow);
+  }
+
+  .gallery-main img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+  }
+
+  .gallery-main:hover img {
+    transform: scale(1.05);
+  }
+
+  .wishlist-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid var(--border);
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px var(--shadow);
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .wishlist-btn:hover,
+  .wishlist-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    transform: scale(1.1);
+  }
+
+  .gallery-thumbs {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+
+  .gallery-thumb {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--bg-secondary);
+    transition: all 0.2s ease;
+  }
+
+  .gallery-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .gallery-thumb:hover,
+  .gallery-thumb.active {
+    border-color: var(--primary);
+    box-shadow: 0 4px 16px var(--shadow);
+  }
+
+  /* Details */
+  .showcase-details {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .product-header {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .brand {
+    font-size: 0.9rem;
+    color: var(--primary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .showcase-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    line-height: 1.2;
+    color: var(--text-primary);
+  }
+
+  .rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .stars {
+    color: #FFA500;
+    font-size: 1.1rem;
+  }
+
+  .rating-text {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+
+  /* Meta Badges */
+  .meta-badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .meta-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  /* Price */
+  .price-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .price-display {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+  }
+
+  .price-old {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    text-decoration: line-through;
+  }
+
+  .discount-badge {
+    padding: 6px 12px;
+    background: var(--accent-light);
+    color: white;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .stock-badge {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .stock-badge.in-stock {
+    background: #E8F5E9;
+    color: #2E7D32;
+  }
+
+  .stock-badge.out-of-stock {
+    background: #FFEBEE;
+    color: #C62828;
+  }
+
+  /* Trust Section */
+  .trust-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding: 20px 0;
+  }
+
+  .trust-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .trust-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+  }
+
+  .trust-label {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    margin: 0;
+  }
+
+  .trust-detail {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin: 4px 0 0 0;
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .showcase-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    .showcase-gallery {
+      position: static;
+    }
+    .trust-section {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .showcase-title {
+      font-size: 1.6rem;
+    }
+    .price {
+      font-size: 1.6rem;
+    }
+    .trust-section {
+      grid-template-columns: 1fr;
+      gap: 12px;
+      padding: 16px 0;
+    }
+    .trust-item {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .price-section {
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-start;
+    }
+  }
+</style>
+
+<section class="product-showcase">
+  <div class="container">
+    <div class="showcase-grid">
+      <!-- Gallery -->
+      <div class="showcase-gallery">
+        <div class="gallery-main">
+          {% if product.featured_media %}
+            <img
+              src="{{ product.featured_media | image_url: width: 800 }}"
+              alt="{{ product.title | escape }}"
+              loading="lazy"
+              class="gallery-image"
+            />
+          {% else %}
+            <div style="font-size: 120px; opacity: 0.5;">🛒</div>
+          {% endif %}
+          <button class="wishlist-btn" aria-label="Add to Wishlist">♡</button>
+        </div>
+
+        {% if product.media.size > 1 %}
+          <div class="gallery-thumbs">
+            {% for media in product.media limit: 5 %}
+              <button class="gallery-thumb" data-media-id="{{ media.id }}" aria-label="View image {{ forloop.index }}">
+                <img src="{{ media | image_url: width: 100 }}" alt="{{ product.title }}" />
+              </button>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Details -->
+      <div class="showcase-details">
+        <!-- Product Header -->
+        <div class="product-header">
+          <p class="brand">{{ product.vendor }}</p>
+          <h1 class="showcase-title">{{ product.title }}</h1>
+          <div class="rating">
+            <span class="stars">★★★★★</span>
+            <span class="rating-text">(128 Bewertungen)</span>
+          </div>
+        </div>
+
+        <!-- Meta Badges -->
+        <div class="meta-badges">
+          {% if product.type != blank %}
+            <span class="meta-badge">{{ product.type }}</span>
+          {% endif %}
+          {% if product.tags.size > 0 %}
+            {% for tag in product.tags limit: 3 %}
+              {% unless tag == "bestseller" or tag == "new" or tag == "hot" or tag == "sale" %}
+                <span class="meta-badge">{{ tag }}</span>
+              {% endunless %}
+            {% endfor %}
+          {% endif %}
+        </div>
+
+        <!-- Price & Stock -->
+        {% assign variant = product.selected_or_first_available_variant %}
+        <div class="price-section">
+          <div class="price-display">
+            <span class="price">{{ variant.price | money }}</span>
+            {% if variant.compare_at_price > variant.price %}
+              <span class="price-old">{{ variant.compare_at_price | money }}</span>
+              <span class="discount-badge">
+                {% assign discount_percent = variant.compare_at_price | minus: variant.price | times: 100 | divided_by: variant.compare_at_price | round %}
+                -{{ discount_percent }}%
+              </span>
+            {% endif %}
+          </div>
+          {% if variant.available %}
+            <span class="stock-badge in-stock">✓ Auf Lager</span>
+          {% else %}
+            <span class="stock-badge out-of-stock">Ausverkauft</span>
+          {% endif %}
+        </div>
+
+        <!-- Trust Badges -->
+        {% if section.settings.show_trust_badges %}
+          <div class="trust-section">
+            <div class="trust-item">
+              <span class="trust-icon">🚚</span>
+              <div>
+                <p class="trust-label">{{ section.settings.trust_badge_1_title }}</p>
+                <p class="trust-detail">{{ section.settings.trust_badge_1_text }}</p>
+              </div>
+            </div>
+            <div class="trust-item">
+              <span class="trust-icon">🌱</span>
+              <div>
+                <p class="trust-label">{{ section.settings.trust_badge_2_title }}</p>
+                <p class="trust-detail">{{ section.settings.trust_badge_2_text }}</p>
+              </div>
+            </div>
+            <div class="trust-item">
+              <span class="trust-icon">🔒</span>
+              <div>
+                <p class="trust-label">{{ section.settings.trust_badge_3_title }}</p>
+                <p class="trust-detail">{{ section.settings.trust_badge_3_text }}</p>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- Add to Cart Form -->
+        {% form 'product', product, class: 'product-form' %}
+          <!-- Variant Selector -->
+          {% if product.variants.size > 1 %}
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <label class="form-label" for="ProductSelect-{{ product.id }}">Variante wählen</label>
+              <select id="ProductSelect-{{ product.id }}" name="id" class="product-variant-select" required>
+                <option value="">Bitte wählen...</option>
+                {% for v in product.variants %}
+                  <option value="{{ v.id }}" {% unless v.available %}disabled{% endunless %}>
+                    {{ v.title }} – {{ v.price | money }}
+                    {% unless v.available %} (Ausverkauft){% endunless %}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+          {% else %}
+            <input type="hidden" name="id" value="{{ variant.id }}" />
+          {% endif %}
+
+          <!-- Quantity Selector -->
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <label class="form-label" for="Quantity-{{ product.id }}">Menge</label>
+            <div style="display: flex; align-items: center; gap: 0; border: 2px solid var(--border); border-radius: 12px; background: white; overflow: hidden;">
+              <button type="button" class="qty-btn qty-minus" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: transparent; color: var(--text-primary); font-size: 1.2rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s ease;">−</button>
+              <input
+                id="Quantity-{{ product.id }}"
+                type="number"
+                name="quantity"
+                min="1"
+                max="99"
+                value="1"
+                class="quantity-input"
+                style="flex: 1; height: 44px; border: none; text-align: center; font-size: 1rem; font-weight: 600; color: var(--text-primary);"
+              />
+              <button type="button" class="qty-btn qty-plus" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: transparent; color: var(--text-primary); font-size: 1.2rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s ease;">+</button>
+            </div>
+          </div>
+
+          <!-- Add to Cart Button -->
+          <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; min-height: 56px; padding: 16px 32px; border-radius: 12px; border: none; font-family: inherit; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; font-size: 1.1rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; box-shadow: 0 8px 24px rgba(224, 123, 57, 0.25);">
+            In den Warenkorb
+          </button>
+        {% endform %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Quantity buttons
+    document.querySelectorAll('.qty-plus').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const input = this.parentElement.querySelector('.quantity-input');
+        input.value = Math.min(parseInt(input.value) + 1, 99);
+      });
+    });
+
+    document.querySelectorAll('.qty-minus').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const input = this.parentElement.querySelector('.quantity-input');
+        input.value = Math.max(parseInt(input.value) - 1, 1);
+      });
+    });
+
+    // Wishlist button
+    document.querySelectorAll('.wishlist-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        this.classList.toggle('active');
+        this.textContent = this.classList.contains('active') ? '♥' : '♡';
+      });
+    });
+
+    // Gallery thumbnails
+    document.querySelectorAll('.gallery-thumb').forEach((thumb, index) => {
+      thumb.addEventListener('click', function() {
+        document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+
+        const mainImage = document.querySelector('.gallery-image');
+        const img = this.querySelector('img');
+        mainImage.src = img.src.replace('width=100', 'width=800');
+      });
+      if (index === 0) thumb.classList.add('active');
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Product Showcase",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_trust_badges",
+      "label": "Show Trust Badges",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "trust_badge_1_title",
+      "label": "Trust Badge 1 Title",
+      "default": "Schnelle Lieferung"
+    },
+    {
+      "type": "text",
+      "id": "trust_badge_1_text",
+      "label": "Trust Badge 1 Text",
+      "default": "2-3 Werktage"
+    },
+    {
+      "type": "text",
+      "id": "trust_badge_2_title",
+      "label": "Trust Badge 2 Title",
+      "default": "100% Authentisch"
+    },
+    {
+      "type": "text",
+      "id": "trust_badge_2_text",
+      "label": "Trust Badge 2 Text",
+      "default": "Hochwertige Zutaten"
+    },
+    {
+      "type": "text",
+      "id": "trust_badge_3_title",
+      "label": "Trust Badge 3 Title",
+      "default": "Sichere Zahlung"
+    },
+    {
+      "type": "text",
+      "id": "trust_badge_3_text",
+      "label": "Trust Badge 3 Text",
+      "default": "SSL verschlüsselt"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Showcase"
+    }
+  ]
+}
+{% endschema %}
