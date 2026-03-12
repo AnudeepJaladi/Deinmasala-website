@@ -1,0 +1,43 @@
+{% assign selected_filter = collection.handle | default: '' %}
+
+<div class="section section-py">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">{{ shop.name }}</div>
+      <h1 class="section-title">{{ collection.title | default: 'Alle Produkte' }}</h1>
+      {% if collection.description != blank %}
+        <p class="section-subtitle">{{ collection.description | strip_html }}</p>
+      {% else %}
+        <p class="section-subtitle">Durchsuche unsere komplette Produktpalette aus Indien.</p>
+      {% endif %}
+    </div>
+
+    <div class="products-load-more" style="margin-bottom: 36px;">
+      <a href="{{ routes.root_url }}" class="btn btn-outline">Zurück zur Startseite</a>
+    </div>
+
+    {% paginate collection.products by 24 %}
+      <div class="products-grid">
+        {% for product in collection.products %}
+          {% render 'product-card', product: product %}
+        {% else %}
+          <div class="reviews-empty">
+            <p>In dieser Kollektion sind aktuell keine Produkte.</p>
+          </div>
+        {% endfor %}
+      </div>
+
+      {% if paginate.pages > 1 %}
+        <div class="product-filter-tabs" style="margin-top: 24px; justify-content: center;">
+          {% if paginate.previous %}
+            <a class="filter-tab" href="{{ paginate.previous.url }}">← Vorherige Seite</a>
+          {% endif %}
+          <span class="filter-tab active">Seite {{ paginate.current_page }} von {{ paginate.pages }}</span>
+          {% if paginate.next %}
+            <a class="filter-tab" href="{{ paginate.next.url }}">Nächste Seite →</a>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endpaginate %}
+  </div>
+</div>
