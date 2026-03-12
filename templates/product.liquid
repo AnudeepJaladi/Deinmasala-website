@@ -12,161 +12,8 @@
     </div>
   </section>
 
-  <!-- Main Product Section -->
-  <section class="section">
-    <div class="container">
-      <div class="product-page-grid">
-        <!-- Left: Image Gallery -->
-        <div class="product-gallery">
-          <div class="product-gallery-main">
-            {% if product.featured_media %}
-              <img
-                class="product-gallery-image"
-                src="{{ product.featured_media | image_url: width: 800 }}"
-                alt="{{ product.title | escape }}"
-                loading="lazy"
-              />
-            {% else %}
-              <div class="product-gallery-placeholder">🛒</div>
-            {% endif %}
-            <button class="product-wishlist-btn" aria-label="Add to Wishlist">♡</button>
-          </div>
-
-          {% if product.media.size > 1 %}
-            <div class="product-gallery-thumbs">
-              {% for media in product.media limit: 5 %}
-                <button class="product-gallery-thumb" data-media-id="{{ media.id }}" aria-label="View image {{ forloop.index }}">
-                  <img src="{{ media | image_url: width: 100 }}" alt="{{ product.title }}" />
-                </button>
-              {% endfor %}
-            </div>
-          {% endif %}
-        </div>
-
-        <!-- Right: Product Details -->
-        <div class="product-details">
-          <!-- Product Header -->
-          <div class="product-header">
-            <p class="product-brand">{{ product.vendor }}</p>
-            <h1 class="product-title">{{ product.title }}</h1>
-            <div class="product-rating-badge">
-              <span class="product-rating-stars">★★★★★</span>
-              <span class="product-rating-text">(128 Bewertungen)</span>
-            </div>
-          </div>
-
-          <!-- Meta Badges -->
-          <div class="product-meta-badges">
-            {% if product.type != blank %}
-              <span class="meta-badge">{{ product.type }}</span>
-            {% endif %}
-            {% if product.tags.size > 0 %}
-              {% for tag in product.tags limit: 3 %}
-                {% unless tag == "bestseller" or tag == "new" or tag == "hot" or tag == "sale" %}
-                  <span class="meta-badge">{{ tag }}</span>
-                {% endunless %}
-              {% endfor %}
-            {% endif %}
-          </div>
-
-          <!-- Price & Stock -->
-          {% assign variant = product.selected_or_first_available_variant %}
-          <div class="product-price-section">
-            <div class="product-price-display">
-              <span class="product-price">{{ variant.price | money }}</span>
-              {% if variant.compare_at_price > variant.price %}
-                <span class="product-price-old">{{ variant.compare_at_price | money }}</span>
-                <span class="product-discount-badge">
-                  {% assign discount_percent = variant.compare_at_price | minus: variant.price | times: 100 | divided_by: variant.compare_at_price | round %}
-                  -{{ discount_percent }}%
-                </span>
-              {% endif %}
-            </div>
-            {% if variant.available %}
-              <span class="product-stock-badge in-stock">✓ Auf Lager</span>
-            {% else %}
-              <span class="product-stock-badge out-of-stock">Ausverkauft</span>
-            {% endif %}
-          </div>
-
-          <!-- Trust Badges -->
-          <div class="product-trust-section">
-            <div class="trust-item">
-              <span class="trust-icon">🚚</span>
-              <div>
-                <p class="trust-label">Schnelle Lieferung</p>
-                <p class="trust-detail">2-3 Werktage</p>
-              </div>
-            </div>
-            <div class="trust-item">
-              <span class="trust-icon">🌱</span>
-              <div>
-                <p class="trust-label">100% Authentisch</p>
-                <p class="trust-detail">Hochwertige Zutaten</p>
-              </div>
-            </div>
-            <div class="trust-item">
-              <span class="trust-icon">🔒</span>
-              <div>
-                <p class="trust-label">Sichere Zahlung</p>
-                <p class="trust-detail">SSL verschlüsselt</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Add to Cart Form -->
-          <form action="/cart/add" method="post" class="product-form">
-            <!-- Variant Selector -->
-            {% if product.variants.size > 1 %}
-              <div class="form-group">
-                <label for="ProductSelect-{{ product.id }}" class="form-label">Variante wählen</label>
-                <select id="ProductSelect-{{ product.id }}" name="id" class="product-variant-select" required>
-                  <option value="">Bitte wählen...</option>
-                  {% for v in product.variants %}
-                    <option value="{{ v.id }}" {% unless v.available %}disabled{% endunless %}>
-                      {{ v.title }} – {{ v.price | money }}
-                      {% unless v.available %} (Ausverkauft){% endunless %}
-                    </option>
-                  {% endfor %}
-                </select>
-              </div>
-            {% else %}
-              <input type="hidden" name="id" value="{{ variant.id }}" />
-            {% endif %}
-
-            <!-- Quantity Selector -->
-            <div class="form-group">
-              <label for="Quantity-{{ product.id }}" class="form-label">Menge</label>
-              <div class="product-quantity-wrapper">
-                <button type="button" class="qty-btn qty-minus" aria-label="Decrease quantity">−</button>
-                <input
-                  id="Quantity-{{ product.id }}"
-                  type="number"
-                  name="quantity"
-                  min="1"
-                  max="99"
-                  value="1"
-                  class="product-quantity-input"
-                  required
-                />
-                <button type="button" class="qty-btn qty-plus" aria-label="Increase quantity">+</button>
-              </div>
-            </div>
-
-            <!-- Add to Cart Button -->
-            <button type="submit" class="btn btn-primary btn-lg btn-full">
-              In den Warenkorb
-            </button>
-
-            <!-- Share Button -->
-            <button type="button" class="btn btn-outline btn-full product-share-btn" style="margin-top: 8px;">
-              Teilen
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- Product Showcase Section -->
+  {% section 'product-showcase' %}
 
   <!-- Product Tabs -->
   <section class="section product-tabs-section">
@@ -263,32 +110,6 @@
   </section>
 
   <script>
-    // Quantity buttons
-    document.querySelectorAll('.qty-plus').forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        const input = this.parentElement.querySelector('.product-quantity-input');
-        input.value = Math.min(parseInt(input.value) + 1, 99);
-      });
-    });
-
-    document.querySelectorAll('.qty-minus').forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        const input = this.parentElement.querySelector('.product-quantity-input');
-        input.value = Math.max(parseInt(input.value) - 1, 1);
-      });
-    });
-
-    // Wishlist button
-    document.querySelectorAll('.product-wishlist-btn').forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        this.classList.toggle('active');
-        this.textContent = this.classList.contains('active') ? '♥' : '♡';
-      });
-    });
-
     // Product tabs
     document.querySelectorAll('.product-tab-btn').forEach(btn => {
       btn.addEventListener('click', function() {
@@ -299,19 +120,6 @@
 
         this.classList.add('active');
         document.getElementById('tab-' + tabName).classList.add('active');
-      });
-    });
-
-    // Share button
-    document.querySelectorAll('.product-share-btn').forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        if (navigator.share) {
-          navigator.share({
-            title: document.querySelector('.product-title').textContent,
-            url: window.location.href
-          });
-        }
       });
     });
   </script>
