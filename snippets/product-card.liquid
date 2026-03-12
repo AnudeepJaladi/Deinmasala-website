@@ -3,14 +3,32 @@
 {% endcomment %}
 {% assign variant = product.selected_or_first_available_variant %}
 {% if variant %}
-  {% assign product_category = 'spices' %}
-  {% if product.type contains 'Dal' or product.type contains 'Linsen' or product.type contains 'Reis' or product.tags contains 'rice' or product.tags contains 'riceanddal' or product.tags contains 'rice & dal' %}
+  {% assign product_category = 'other' %}
+  {% assign product_type = product.type | downcase %}
+  {% assign product_tags = product.tags | join: ',' | downcase %}
+  {% assign product_title = product.title | downcase %}
+
+  {% if product_type contains 'dal' or product_type contains 'lentil' or product_type contains 'reis' or product_type contains 'rice' or product_tags contains 'rice' or product_tags contains 'dal' or product_tags contains 'riceanddal' or product_tags contains 'rice & dal' %}
     {% assign product_category = 'rice' %}
-  {% elsif product.type contains 'Snack' or product.tags contains 'snacks' %}
+  {% elsif product_type contains 'snack' or product_type contains 'namkeen' or product_type contains 'chip' or product_tags contains 'snacks' or product_tags contains 'namkeen' %}
     {% assign product_category = 'snacks' %}
-  {% elsif product.type contains 'Süß' or product.type contains 'Sweets' or product.type contains 'Mithai' or product.tags contains 'sweets' %}
+  {% elsif product_type contains 'süß' or product_type contains 'sweet' or product_type contains 'mithai' or product_tags contains 'sweets' or product_tags contains 'mithai' or product_tags contains 'dessert' %}
     {% assign product_category = 'sweets' %}
-  {% elsif product.tags contains 'rice' == false and product.tags contains 'spices' %}
+  {% elsif product_type contains 'mehl' or product_type contains 'mehl & getreide' or product_type contains 'mehl' or product_type contains 'flour' or product_type contains 'grain' or product_tags contains 'flour' or product_tags contains 'atta' or product_tags contains 'wheat' or product_tags contains 'ragi' %}
+    {% assign product_category = 'flour' %}
+  {% elsif product_type contains 'pickle' or product_type contains 'achar' or product_tags contains 'pickle' or product_tags contains 'pickles' or product_title contains 'achar' %}
+    {% assign product_category = 'pickles' %}
+  {% elsif product_type contains 'frozen' or product_type contains 'kühl' or product_type contains 'gefr' or product_tags contains 'frozen' %}
+    {% assign product_category = 'frozen' %}
+  {% elsif product_type contains 'chai' or product_type contains 'tea' or product_type contains 'beverage' or product_type contains 'getränk' or product_tags contains 'beverages' or product_tags contains 'tea' or product_tags contains 'chai' %}
+    {% assign product_category = 'beverages' %}
+  {% elsif product_type contains 'puja' or product_type contains 'incense' or product_tags contains 'puja' or product_tags contains 'incense' %}
+    {% assign product_category = 'puja' %}
+  {% elsif product_type contains 'kcal' or product_type contains 'öl' or product_type contains 'ghee' or product_type contains 'oil' or product_type contains 'koch' or product_tags contains 'oil' or product_tags contains 'ghee' %}
+    {% assign product_category = 'cooking' %}
+  {% elsif product_type contains 'frisch' or product_type contains 'fresh' or product_tags contains 'fresh' or product_tags contains 'produce' %}
+    {% assign product_category = 'fresh' %}
+  {% elsif product_tags contains 'spices' or product_type contains 'gewürz' or product_type contains 'masala' %}
     {% assign product_category = 'spices' %}
   {% endif %}
 
