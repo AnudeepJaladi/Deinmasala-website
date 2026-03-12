@@ -15,17 +15,19 @@
       <div class="deal-badge">{{ discount_label }}</div>
     {% endif %}
 
-    <div class="deal-img">
-      {% if product.featured_image %}
-        <img src="{{ product.featured_image | image_url: width: 220 }}" alt="{{ product.title | escape }}" />
-      {% else %}
-        <span class="deal-emoji">🌶️</span>
-      {% endif %}
-    </div>
+    <a href="{{ product.url }}" aria-label="{{ product.title }}">
+      <div class="deal-img">
+        {% if product.featured_image %}
+          <img src="{{ product.featured_image | image_url: width: 220 }}" alt="{{ product.title | escape }}" />
+        {% else %}
+          <span class="deal-emoji">🌶️</span>
+        {% endif %}
+      </div>
+    </a>
 
     <div class="deal-info">
       <span class="deal-category">{{ product.type | default: 'Indisch' }}</span>
-      <h3>{{ product.title }}</h3>
+      <a href="{{ product.url }}"><h3>{{ product.title }}</h3></a>
       <p>{{ product.description | strip_html | truncate: 90 }}</p>
 
       <div class="deal-price">

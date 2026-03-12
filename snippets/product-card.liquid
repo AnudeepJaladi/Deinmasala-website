@@ -55,11 +55,13 @@
 
   <div class="product-card" data-category="{{ product_category }}">
     <div class="product-img-wrap">
-      {% if product.featured_image %}
-        <img src="{{ product.featured_image | image_url: width: 300 }}" alt="{{ product.title | escape }}" class="product-image" />
-      {% else %}
-        <span class="product-emoji">🛒</span>
-      {% endif %}
+      <a href="{{ product.url }}" class="product-link" aria-label="{{ product.title }}">
+        {% if product.featured_image %}
+          <img src="{{ product.featured_image | image_url: width: 300 }}" alt="{{ product.title | escape }}" class="product-image" />
+        {% else %}
+          <span class="product-emoji">🛒</span>
+        {% endif %}
+      </a>
 
       {% if product_badge != blank %}
         <div class="product-badges">
@@ -72,7 +74,7 @@
 
     <div class="product-info">
       <span class="product-brand">{{ product.vendor }}</span>
-      <h3 class="product-name">{{ product.title }}</h3>
+        <a href="{{ product.url }}"><h3 class="product-name">{{ product.title }}</h3></a>
       <p class="product-desc">{{ product.description | strip_html | truncate: 90 }}</p>
 
       <div class="product-rating">
