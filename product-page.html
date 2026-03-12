@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeinMasala - Produkt</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #E07B39;
+      --primary-dark: #C4612A;
+      --primary-light: #F2A26E;
+      --secondary: #D4A017;
+      --secondary-dark: #B8860B;
+      --secondary-light: #F0C842;
+      --accent: #8B1A1A;
+      --accent-light: #C41E3A;
+      --bg-primary: #FFF8F0;
+      --bg-secondary: #FFF0E0;
+      --bg-dark: #2C1008;
+      --text-primary: #2C1008;
+      --text-secondary: #6B4226;
+      --text-light: #9A7050;
+      --border: #E8D5C4;
+      --border-light: #F5EAE0;
+      --shadow: rgba(44, 16, 8, 0.12);
+      --shadow-strong: rgba(44, 16, 8, 0.25);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .section {
+      padding: 80px 0;
+    }
+
+    /* Navigation */
+    nav {
+      background: var(--bg-primary);
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+    }
+
+    .breadcrumb a {
+      color: var(--primary);
+      transition: color 0.2s ease;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    /* Product Grid */
+    .product-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+
+    /* Gallery */
+    .gallery {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: sticky;
+      top: 120px;
+    }
+
+    .gallery-main {
+      position: relative;
+      aspect-ratio: 1;
+      background: var(--bg-secondary);
+      border-radius: 24px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 20px 48px var(--shadow);
+    }
+
+    .gallery-main img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: transform 0.3s ease;
+    }
+
+    .gallery-main:hover img {
+      transform: scale(1.05);
+    }
+
+    .wishlist-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: white;
+      border: 2px solid var(--border);
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px var(--shadow);
+      transition: all 0.2s ease;
+    }
+
+    .wishlist-btn:hover,
+    .wishlist-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      transform: scale(1.1);
+    }
+
+    .gallery-thumbs {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .gallery-thumb {
+      flex-shrink: 0;
+      width: 80px;
+      height: 80px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      background: var(--bg-secondary);
+      transition: all 0.2s ease;
+    }
+
+    .gallery-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .gallery-thumb:hover,
+    .gallery-thumb.active {
+      border-color: var(--primary);
+      box-shadow: 0 4px 16px var(--shadow);
+    }
+
+    /* Details */
+    .details {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .product-header {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .brand {
+      font-size: 0.9rem;
+      color: var(--primary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .product-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+
+    .rating {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stars {
+      color: #FFA500;
+      font-size: 1.1rem;
+    }
+
+    .rating-text {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    /* Meta Badges */
+    .meta-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    /* Price */
+    .price-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .price-display {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .price {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .price-old {
+      font-size: 1.2rem;
+      color: var(--text-light);
+      text-decoration: line-through;
+    }
+
+    .discount {
+      padding: 6px 12px;
+      background: var(--accent-light);
+      color: white;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .stock {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .stock.in-stock {
+      background: #E8F5E9;
+      color: #2E7D32;
+    }
+
+    .stock.out-of-stock {
+      background: #FFEBEE;
+      color: #C62828;
+    }
+
+    /* Trust Section */
+    .trust-section {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      padding: 20px 0;
+    }
+
+    .trust-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .trust-icon {
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .trust-label {
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      margin: 0;
+    }
+
+    .trust-detail {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      margin: 4px 0 0 0;
+    }
+
+    /* Form */
+    .product-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+    }
+
+    select,
+    input[type="number"] {
+      padding: 12px 16px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: white;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    select:hover,
+    input[type="number"]:hover {
+      border-color: var(--primary);
+    }
+
+    select:focus,
+    input[type="number"]:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(224, 123, 57, 0.1);
+    }
+
+    /* Quantity */
+    .quantity-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: white;
+      overflow: hidden;
+    }
+
+    .qty-btn {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      color: var(--text-primary);
+      font-size: 1.2rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .qty-btn:hover {
+      background: var(--bg-secondary);
+      color: var(--primary);
+    }
+
+    .quantity-input {
+      flex: 1;
+      height: 44px;
+      border: none;
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 16px 32px;
+      border-radius: 12px;
+      border: none;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      box-shadow: 0 8px 24px rgba(224, 123, 57, 0.25);
+      width: 100%;
+      min-height: 56px;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(224, 123, 57, 0.35);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+      width: 100%;
+      min-height: 48px;
+    }
+
+    .btn-outline:hover {
+      background: var(--bg-secondary);
+    }
+
+    /* Tabs */
+    .tabs-section {
+      padding: 80px 0;
+      background: var(--bg-secondary);
+      margin-top: 60px;
+    }
+
+    .tabs-header {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 32px;
+    }
+
+    .tab-btn {
+      padding: 16px 24px;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s ease;
+      position: relative;
+      top: 2px;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .tab-pane {
+      display: none;
+    }
+
+    .tab-pane.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .tab-content {
+      line-height: 1.8;
+    }
+
+    .tab-content h3 {
+      margin-bottom: 16px;
+      color: var(--text-primary);
+    }
+
+    .tab-content ul {
+      margin-left: 20px;
+    }
+
+    .tab-content li {
+      margin-bottom: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* Reviews */
+    .reviews-section {
+      padding: 80px 0;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      margin: 16px 0;
+    }
+
+    .reviews-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+    }
+
+    .reviews-rating {
+      text-align: center;
+      padding: 40px;
+      background: var(--bg-secondary);
+      border-radius: 16px;
+    }
+
+    .rating-value {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .review-item {
+      padding: 20px;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      border-left: 4px solid var(--primary);
+      margin-bottom: 20px;
+    }
+
+    .review-author {
+      margin: 0;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+    }
+
+    .review-rating {
+      color: #FFA500;
+      font-size: 0.9rem;
+      margin: 8px 0;
+    }
+
+    .review-text {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin: 8px 0 0 0;
+      font-size: 0.95rem;
+    }
+
+    /* Related Products */
+    .related-section {
+      padding: 80px 0;
+      background: var(--bg-secondary);
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px var(--shadow);
+      transition: all 0.2s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px var(--shadow);
+    }
+
+    .product-card-image {
+      width: 100%;
+      aspect-ratio: 1;
+      background: var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+    }
+
+    .product-card-info {
+      padding: 16px;
+    }
+
+    .product-card-category {
+      color: var(--primary);
+      font-size: 0.85rem;
+      margin: 0;
+    }
+
+    .product-card-title {
+      font-weight: 600;
+      margin: 8px 0;
+      font-size: 0.95rem;
+    }
+
+    .product-card-price {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      margin: 8px 0 0 0;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--bg-dark);
+      color: var(--text-light);
+      padding: 40px 0 20px 0;
+      margin-top: 60px;
+    }
+
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      margin-bottom: 32px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid rgba(255, 248, 240, 0.1);
+    }
+
+    footer h4 {
+      color: var(--text-on-dark, white);
+      margin-bottom: 16px;
+      font-size: 1rem;
+    }
+
+    footer a {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      transition: color 0.2s ease;
+    }
+
+    footer a:hover {
+      color: var(--primary);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .product-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      .gallery {
+        position: static;
+      }
+      .trust-section {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .reviews-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      .product-title {
+        font-size: 1.6rem;
+      }
+      .price {
+        font-size: 1.6rem;
+      }
+      .trust-section {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 16px 0;
+      }
+      .trust-item {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .footer-content {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .product-grid {
+        gap: 32px;
+      }
+      .product-title {
+        font-size: 1.4rem;
+      }
+      .price-section {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+      }
+      .products-grid {
+        grid-template-columns: 1fr;
+      }
+      .footer-content {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="container">
+      <div class="nav-content">
+        <div class="logo">DeinMasala</div>
+        <div class="nav-links">
+          <a href="/">Home</a>
+          <a href="/#products">Produkte</a>
+          <a href="/#about">Über uns</a>
+          <a href="/cart">Warenkorb</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Breadcrumb -->
+    <section style="padding: 24px 0; border-bottom: 1px solid var(--border);">
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="/">Startseite</a>
+          <span>›</span>
+          <a href="/products">Alle Produkte</a>
+          <span>›</span>
+          <span>Bitter Gourd / Karela / Kakarakay</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product Section -->
+    <section class="section">
+      <div class="container">
+        <div class="product-grid">
+          <!-- Gallery -->
+          <div class="gallery">
+            <div class="gallery-main">
+              <svg viewBox="0 0 200 200" style="width: 80%; height: 80%; opacity: 0.3;">
+                <rect x="20" y="20" width="160" height="160" fill="var(--primary)" rx="10"/>
+              </svg>
+              <button class="wishlist-btn" aria-label="Add to Wishlist">♡</button>
+            </div>
+            <div class="gallery-thumbs">
+              <button class="gallery-thumb" style="background: var(--bg-secondary);">📷</button>
+              <button class="gallery-thumb" style="background: var(--bg-secondary);">📷</button>
+              <button class="gallery-thumb" style="background: var(--bg-secondary);">📷</button>
+              <button class="gallery-thumb" style="background: var(--bg-secondary);">📷</button>
+            </div>
+          </div>
+
+          <!-- Details -->
+          <div class="details">
+            <div class="product-header">
+              <p class="brand">DeinMasala</p>
+              <h1 class="product-title">Bitter Gourd / Karela / Kakarakay</h1>
+              <div class="rating">
+                <span class="stars">★★★★★</span>
+                <span class="rating-text">(128 Bewertungen)</span>
+              </div>
+            </div>
+
+            <div class="meta-badges">
+              <span class="badge">Frisches Gemüse</span>
+              <span class="badge">Bio</span>
+              <span class="badge">Vegan</span>
+            </div>
+
+            <div class="price-section">
+              <div class="price-display">
+                <span class="price">€4,50</span>
+                <span class="price-old">€6,00</span>
+                <span class="discount">-25%</span>
+              </div>
+              <span class="stock in-stock">✓ Auf Lager</span>
+            </div>
+
+            <div class="trust-section">
+              <div class="trust-item">
+                <span class="trust-icon">🚚</span>
+                <div>
+                  <p class="trust-label">Schnelle Lieferung</p>
+                  <p class="trust-detail">2-3 Werktage</p>
+                </div>
+              </div>
+              <div class="trust-item">
+                <span class="trust-icon">🌱</span>
+                <div>
+                  <p class="trust-label">100% Authentisch</p>
+                  <p class="trust-detail">Hochwertige Zutaten</p>
+                </div>
+              </div>
+              <div class="trust-item">
+                <span class="trust-icon">🔒</span>
+                <div>
+                  <p class="trust-label">Sichere Zahlung</p>
+                  <p class="trust-detail">SSL verschlüsselt</p>
+                </div>
+              </div>
+            </div>
+
+            <form class="product-form" action="/api/cart/add" method="POST">
+              <div class="form-group">
+                <label class="form-label">Variante wählen</label>
+                <select name="variant" required>
+                  <option value="">Bitte wählen...</option>
+                  <option value="500g">500g – €4,50</option>
+                  <option value="1kg">1kg – €8,50</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Menge</label>
+                <div class="quantity-wrapper">
+                  <button type="button" class="qty-btn qty-minus">−</button>
+                  <input type="number" class="quantity-input" name="quantity" value="1" min="1" max="99">
+                  <button type="button" class="qty-btn qty-plus">+</button>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary">In den Warenkorb</button>
+              <button type="button" class="btn btn-outline share-btn" style="margin-top: 8px;">Teilen</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tabs -->
+    <section class="tabs-section">
+      <div class="container">
+        <div class="tabs-header">
+          <button class="tab-btn active" data-tab="description">Beschreibung</button>
+          <button class="tab-btn" data-tab="ingredients">Zutaten & Nährwerte</button>
+          <button class="tab-btn" data-tab="shipping">Versand & Rückgabe</button>
+        </div>
+
+        <div id="tab-description" class="tab-pane active">
+          <div class="tab-content">
+            <p>Frisches, biologisches Bittergurkengemüse, auch bekannt als Karela oder Kakarakay. Dieses grüne Gemüse ist reich an Vitaminen und Mineralstoffen und wird in vielen asiatischen Küchen verwendet. Mit einem einzigartigen bitteren Geschmack, der zahlreiche gesundheitliche Vorteile bietet.</p>
+            <p style="margin-top: 16px;">Perfekt für traditionelle indische und asiatische Gerichte. Kann gedünstet, gebraten oder in Curries verwendet werden.</p>
+          </div>
+        </div>
+
+        <div id="tab-ingredients" class="tab-pane">
+          <div class="tab-content">
+            <h3>Zutaten & Nährwerte</h3>
+            <p>Detaillierte Informationen zu Zutaten und Nährwerten finden Sie auf dem Produktetikett.</p>
+          </div>
+        </div>
+
+        <div id="tab-shipping" class="tab-pane">
+          <div class="tab-content">
+            <h3>Versand & Rückgabe</h3>
+            <ul>
+              <li><strong>Kostenloser Versand</strong> ab 50€ Bestellwert</li>
+              <li><strong>Lieferzeit:</strong> 2-3 Werktage (Mo-Fr)</li>
+              <li><strong>Rückgaberecht:</strong> 14 Tage ohne Angabe von Gründen</li>
+              <li><strong>Rückversand:</strong> Kostenlos für fehlerhafte Produkte</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reviews -->
+    <section class="reviews-section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Kundenbewertungen</h2>
+        </div>
+
+        <div class="reviews-container">
+          <div class="reviews-rating">
+            <p class="rating-value">4.5</p>
+            <p class="stars">★★★★★</p>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">128 Bewertungen</p>
+          </div>
+          <div>
+            <div class="review-item">
+              <p class="review-author"><strong>Sarah K.</strong></p>
+              <p class="review-rating">★★★★★</p>
+              <p class="review-text">"Großartig! Die Qualität ist wirklich excellent und der Versand war sehr schnell."</p>
+            </div>
+            <div class="review-item">
+              <p class="review-author"><strong>Michael B.</strong></p>
+              <p class="review-rating">★★★★★</p>
+              <p class="review-text">"Authentische Gemüse mit hervorragendem Geschmack. Sehr zu empfehlen!"</p>
+            </div>
+            <div class="review-item">
+              <p class="review-author"><strong>Anna M.</strong></p>
+              <p class="review-rating">★★★★☆</p>
+              <p class="review-text">"Gutes Produkt, schnelle Lieferung. Beim nächsten Mal gerne wieder."</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Products -->
+    <section class="related-section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Ähnliche Produkte</h2>
+        </div>
+
+        <div class="products-grid">
+          <div class="product-card">
+            <div class="product-card-image">🌶️</div>
+            <div class="product-card-info">
+              <p class="product-card-category">GEMÜSE</p>
+              <p class="product-card-title">Chili Pulver</p>
+              <p class="product-card-price">€8,99</p>
+            </div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-card-image">🧅</div>
+            <div class="product-card-info">
+              <p class="product-card-category">GEMÜSE</p>
+              <p class="product-card-title">Zwiebeln</p>
+              <p class="product-card-price">€3,99</p>
+            </div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-card-image">🧄</div>
+            <div class="product-card-info">
+              <p class="product-card-category">GEMÜSE</p>
+              <p class="product-card-title">Knoblauch</p>
+              <p class="product-card-price">€4,99</p>
+            </div>
+          </div>
+
+          <div class="product-card">
+            <div class="product-card-image">🥬</div>
+            <div class="product-card-info">
+              <p class="product-card-category">GEMÜSE</p>
+              <p class="product-card-title">Spinat</p>
+              <p class="product-card-price">€5,99</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div>
+          <h4>Über uns</h4>
+          <a href="#">Unsere Geschichte</a>
+          <a href="#">Team</a>
+          <a href="#">Nachhaltigkeit</a>
+        </div>
+        <div>
+          <h4>Service</h4>
+          <a href="#">Kontakt</a>
+          <a href="#">FAQ</a>
+          <a href="#">Versand</a>
+        </div>
+        <div>
+          <h4>Legal</h4>
+          <a href="#">Datenschutz</a>
+          <a href="#">Impressum</a>
+          <a href="#">AGB</a>
+        </div>
+        <div>
+          <h4>Soziale Medien</h4>
+          <a href="#">Instagram</a>
+          <a href="#">Facebook</a>
+          <a href="#">WhatsApp</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 DeinMasala. Alle Rechte vorbehalten.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Quantity buttons
+    document.querySelectorAll('.qty-plus').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const input = this.parentElement.querySelector('.quantity-input');
+        input.value = Math.min(parseInt(input.value) + 1, 99);
+      });
+    });
+
+    document.querySelectorAll('.qty-minus').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const input = this.parentElement.querySelector('.quantity-input');
+        input.value = Math.max(parseInt(input.value) - 1, 1);
+      });
+    });
+
+    // Wishlist button
+    document.querySelectorAll('.wishlist-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        this.classList.toggle('active');
+        this.textContent = this.classList.contains('active') ? '♥' : '♡';
+      });
+    });
+
+    // Product tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const tabName = this.dataset.tab;
+
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+
+        this.classList.add('active');
+        document.getElementById('tab-' + tabName).classList.add('active');
+      });
+    });
+
+    // Share button
+    document.querySelectorAll('.share-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (navigator.share) {
+          navigator.share({
+            title: 'Bitter Gourd / Karela / Kakarakay',
+            url: window.location.href
+          });
+        } else {
+          alert('Link: ' + window.location.href);
+        }
+      });
+    });
+
+    // Gallery thumbnails
+    document.querySelectorAll('.gallery-thumb').forEach((thumb, index) => {
+      thumb.addEventListener('click', function() {
+        document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+      });
+      if (index === 0) thumb.classList.add('active');
+    });
+  </script>
+</body>
+</html>
