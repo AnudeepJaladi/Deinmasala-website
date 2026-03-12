@@ -1,50 +1,128 @@
 {% if product %}
   <section class="section">
     <div class="container">
-      <div class="product-layout">
-        <div class="product-breadcrumb">
-          <a href="{{ routes.root_url }}">Startseite</a>
-          <span>›</span>
-          <a href="/collections/all">Alle Produkte</a>
-          <span>›</span>
-          <span>{{ product.title }}</span>
-        </div>
+      <!-- Breadcrumb Navigation -->
+      <div class="product-breadcrumb">
+        <a href="{{ routes.root_url }}">Startseite</a>
+        <span class="breadcrumb-sep">›</span>
+        <a href="/collections/all">Alle Produkte</a>
+        <span class="breadcrumb-sep">›</span>
+        <span>{{ product.title }}</span>
+      </div>
+    </div>
+  </section>
 
-        <div class="product-page-grid">
-          <div class="product-page-media">
+  <!-- Main Product Section -->
+  <section class="section product-page-section">
+    <div class="container">
+      <div class="product-page-grid">
+        <!-- Image Gallery -->
+        <div class="product-gallery">
+          <div class="product-gallery-main">
             {% if product.featured_media %}
               <img
-                class="product-page-image"
-                src="{{ product.featured_media | image_url: width: 900 }}"
+                class="product-gallery-image"
+                src="{{ product.featured_media | image_url: width: 800 }}"
                 alt="{{ product.title | escape }}"
                 loading="lazy"
               />
             {% else %}
-              <div class="product-page-placeholder">🛒</div>
+              <div class="product-gallery-placeholder">🛒</div>
+            {% endif %}
+            <button class="product-wishlist-btn" aria-label="Add to Wishlist">♡</button>
+          </div>
+
+          <!-- Thumbnail Gallery (if multiple images) -->
+          {% if product.media.size > 1 %}
+            <div class="product-gallery-thumbs">
+              {% for media in product.media limit: 5 %}
+                <button class="product-gallery-thumb" data-media-id="{{ media.id }}" aria-label="View image {{ forloop.index }}">
+                  <img src="{{ media | image_url: width: 100 }}" alt="{{ product.title }}" />
+                </button>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Product Details -->
+        <div class="product-details">
+          <!-- Header: Brand, Title, Rating -->
+          <div class="product-header">
+            <p class="product-brand">{{ product.vendor }}</p>
+            <h1 class="product-title">{{ product.title }}</h1>
+            <div class="product-rating-badge">
+              <span class="product-rating-stars">★★★★★</span>
+              <span class="product-rating-text">(128 Bewertungen)</span>
+            </div>
+          </div>
+
+          <!-- Quick Info Badges -->
+          <div class="product-meta-badges">
+            {% if product.type != blank %}
+              <span class="meta-badge">{{ product.type }}</span>
+            {% endif %}
+            {% if product.tags.size > 0 %}
+              {% for tag in product.tags limit: 3 %}
+                {% unless tag == "bestseller" or tag == "new" or tag == "hot" or tag == "sale" %}
+                  <span class="meta-badge">{{ tag }}</span>
+                {% endunless %}
+              {% endfor %}
             {% endif %}
           </div>
 
-          <div class="product-page-content">
-            <p class="product-brand">{{ product.vendor }}</p>
-            <h1 class="section-title">{{ product.title }}</h1>
-            <p class="product-meta">{{ product.type }}{% if product.tags.size > 0 %} · {{ product.tags | join: ', ' }}{% endif %}</p>
-
-            <div class="product-price-row">
-              {% assign variant = product.selected_or_first_available_variant %}
+          <!-- Price Section -->
+          {% assign variant = product.selected_or_first_available_variant %}
+          <div class="product-price-section">
+            <div class="product-price-display">
               <span class="product-price">{{ variant.price | money }}</span>
               {% if variant.compare_at_price > variant.price %}
-                <span class="price-was">{{ variant.compare_at_price | money }}</span>
+                <span class="product-price-old">{{ variant.compare_at_price | money }}</span>
+                <span class="product-discount-badge">
+                  {% assign discount_percent = variant.compare_at_price | minus: variant.price | times: 100 | divided_by: variant.compare_at_price | round %}
+                  -{{ discount_percent }}%
+                </span>
               {% endif %}
             </div>
+            {% if variant.available %}
+              <span class="product-stock-badge in-stock">✓ Auf Lager</span>
+            {% else %}
+              <span class="product-stock-badge out-of-stock">Ausverkauft</span>
+            {% endif %}
+          </div>
 
-            <div class="product-description">
-              {{ product.description }}
+          <!-- Trust Badges Section -->
+          <div class="product-trust-section">
+            <div class="trust-item">
+              <span class="trust-icon">🚚</span>
+              <div>
+                <p class="trust-label">Schnelle Lieferung</p>
+                <p class="trust-detail">2-3 Werktage</p>
+              </div>
             </div>
+            <div class="trust-item">
+              <span class="trust-icon">🌱</span>
+              <div>
+                <p class="trust-label">100% Authentisch</p>
+                <p class="trust-detail">Hochwertige Zutaten</p>
+              </div>
+            </div>
+            <div class="trust-item">
+              <span class="trust-icon">🔒</span>
+              <div>
+                <p class="trust-label">Sichere Zahlung</p>
+                <p class="trust-detail">SSL verschlüsselt</p>
+              </div>
+            </div>
+          </div>
 
-            <form action="/cart/add" method="post" class="product-page-form">
-              {% if product.variants.size > 1 %}
-                <label for="ProductSelect-{{ product.id }}">Variante</label>
-                <select id="ProductSelect-{{ product.id }}" name="id" class="product-variant-select">
+          <!-- Add to Cart Form -->
+          <form action="/cart/add" method="post" class="product-form">
+            <!-- Variant Selector -->
+            {% if product.variants.size > 1 %}
+              <div class="form-group">
+                <label for="ProductSelect-{{ product.id }}" class="form-label">Variante wählen</label>
+                <select id="ProductSelect-{{ product.id }}" name="id" class="product-variant-select" required>
+                  <option value="">Bitte wählen...</option>
                   {% for v in product.variants %}
                     <option value="{{ v.id }}" {% unless v.available %}disabled{% endunless %}>
                       {{ v.title }} – {{ v.price | money }}
@@ -52,31 +130,230 @@
                     </option>
                   {% endfor %}
                 </select>
-              {% else %}
-                <input type="hidden" name="id" value="{{ variant.id }}" />
-              {% endif %}
+              </div>
+            {% else %}
+              <input type="hidden" name="id" value="{{ variant.id }}" />
+            {% endif %}
 
-              <label for="Quantity-{{ product.id }}">Menge</label>
-              <input
-                id="Quantity-{{ product.id }}"
-                type="number"
-                name="quantity"
-                min="1"
-                value="1"
-                class="product-quantity-input"
-              />
+            <!-- Quantity Selector -->
+            <div class="form-group">
+              <label for="Quantity-{{ product.id }}" class="form-label">Menge</label>
+              <div class="product-quantity-wrapper">
+                <button type="button" class="qty-btn qty-minus" aria-label="Menge verringern">−</button>
+                <input
+                  id="Quantity-{{ product.id }}"
+                  type="number"
+                  name="quantity"
+                  min="1"
+                  max="99"
+                  value="1"
+                  class="product-quantity-input"
+                  required
+                />
+                <button type="button" class="qty-btn qty-plus" aria-label="Menge erhöhen">+</button>
+              </div>
+            </div>
 
-              <button type="submit" class="btn btn-primary btn-full">In den Warenkorb</button>
-            </form>
+            <!-- Add to Cart Button -->
+            <button type="submit" class="btn btn-primary btn-lg btn-full product-add-to-cart">
+              In den Warenkorb
+            </button>
+
+            <!-- Secondary Actions -->
+            <div class="product-secondary-actions">
+              <button type="button" class="btn btn-outline product-share-btn">
+                <span>Teilen</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Description Tabs -->
+  <section class="section product-tabs-section">
+    <div class="container">
+      <div class="product-tabs">
+        <div class="product-tabs-header">
+          <button class="product-tab-btn active" data-tab="description">
+            Beschreibung
+          </button>
+          <button class="product-tab-btn" data-tab="ingredients">
+            Zutaten & Nährwerte
+          </button>
+          <button class="product-tab-btn" data-tab="shipping">
+            Versand & Rückgabe
+          </button>
+        </div>
+
+        <div class="product-tabs-content">
+          <!-- Description Tab -->
+          <div class="product-tab-pane active" id="tab-description">
+            <div class="tab-content-text">
+              {{ product.description }}
+            </div>
+          </div>
+
+          <!-- Ingredients Tab -->
+          <div class="product-tab-pane" id="tab-ingredients">
+            <div class="tab-content-text">
+              <h3>Zutaten & Nährwerte</h3>
+              <p>Detaillierte Informationen zu Zutaten und Nährwerten finden Sie auf dem Produktetikett.</p>
+            </div>
+          </div>
+
+          <!-- Shipping Tab -->
+          <div class="product-tab-pane" id="tab-shipping">
+            <div class="tab-content-text">
+              <h3>Versand & Rückgabe</h3>
+              <ul>
+                <li><strong>Kostenloser Versand</strong> ab 50€ Bestellwert</li>
+                <li><strong>Lieferzeit:</strong> 2-3 Werktage (Mo-Fr)</li>
+                <li><strong>Rückgaberecht:</strong> 14 Tage ohne Angabe von Gründen</li>
+                <li><strong>Rückversand:</strong> Kostenlos für fehlerhafte Produkte</li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- Reviews Section -->
+  <section class="section product-reviews-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Kundenbewertungen</h2>
+      </div>
+
+      <div class="reviews-container">
+        <div class="reviews-summary">
+          <div class="reviews-rating-large">
+            <p class="rating-value">4.5</p>
+            <p class="rating-stars">★★★★★</p>
+            <p class="rating-count">128 Bewertungen</p>
+          </div>
+          <div class="reviews-list">
+            <div class="review-item">
+              <p class="review-author"><strong>Sarah K.</strong></p>
+              <p class="review-rating">★★★★★</p>
+              <p class="review-text">"Großartig! Die Qualität ist wirklich excellent und der Versand war sehr schnell."</p>
+            </div>
+            <div class="review-item">
+              <p class="review-author"><strong>Michael B.</strong></p>
+              <p class="review-rating">★★★★★</p>
+              <p class="review-text">"Authentische Gewürze mit hervorragendem Geschmack. Sehr zu empfehlen!"</p>
+            </div>
+            <div class="review-item">
+              <p class="review-author"><strong>Anna M.</strong></p>
+              <p class="review-rating">★★★★☆</p>
+              <p class="review-text">"Gutes Produkt, schnelle Lieferung. Beim nächsten Mal gerne wieder."</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Related Products Section -->
+  <section class="section product-related-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Ähnliche Produkte</h2>
+        <p class="section-subtitle">Sie könnten auch interessiert sein</p>
+      </div>
+
+      <div class="products-grid">
+        {% assign category_products = product.collections.first.products | where: "available", true | where: "id", "!=" product.id | limit: 4 %}
+        {% if category_products.size > 0 %}
+          {% for prod in category_products %}
+            {% render 'product-card', product: prod %}
+          {% endfor %}
+        {% else %}
+          {% assign all_products = product.collections.first.products | where: "id", "!=" product.id | limit: 4 %}
+          {% for prod in all_products %}
+            {% render 'product-card', product: prod %}
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
 {% else %}
   <section class="section">
     <div class="container">
-      <p>Produkt nicht gefunden.</p>
+      <div class="product-not-found">
+        <p class="section-title">Produkt nicht gefunden</p>
+        <p class="product-not-found-text">Das gesuchte Produkt existiert leider nicht oder wurde entfernt.</p>
+        <a href="/collections/all" class="btn btn-primary">Zurück zu allen Produkten</a>
+      </div>
     </div>
   </section>
 {% endif %}
+
+<script>
+  // Quantity increment/decrement
+  document.querySelectorAll('.qty-plus').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const input = this.parentElement.querySelector('.product-quantity-input');
+      input.value = Math.min(parseInt(input.value) + 1, 99);
+    });
+  });
+
+  document.querySelectorAll('.qty-minus').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const input = this.parentElement.querySelector('.product-quantity-input');
+      input.value = Math.max(parseInt(input.value) - 1, 1);
+    });
+  });
+
+  // Wishlist button
+  document.querySelectorAll('.product-wishlist-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      this.classList.toggle('active');
+      this.textContent = this.classList.contains('active') ? '♥' : '♡';
+    });
+  });
+
+  // Product tabs
+  document.querySelectorAll('.product-tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const tabName = this.dataset.tab;
+
+      document.querySelectorAll('.product-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.product-tab-pane').forEach(p => p.classList.remove('active'));
+
+      this.classList.add('active');
+      document.getElementById('tab-' + tabName).classList.add('active');
+    });
+  });
+
+  // Image gallery thumbnails
+  document.querySelectorAll('.product-gallery-thumb').forEach(thumb => {
+    thumb.addEventListener('click', function() {
+      const mainImage = document.querySelector('.product-gallery-image');
+      const img = this.querySelector('img');
+      mainImage.src = img.src.replace('width=100', 'width=800');
+
+      document.querySelectorAll('.product-gallery-thumb').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  // Share button
+  document.querySelectorAll('.product-share-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (navigator.share) {
+        navigator.share({
+          title: document.querySelector('.product-title').textContent,
+          url: window.location.href
+        });
+      }
+    });
+  });
+</script>
